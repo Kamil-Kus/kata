@@ -1,0 +1,2 @@
+# kata
+Kata for java
