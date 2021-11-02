@@ -1,5 +1,4 @@
 import java.util.*;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -60,22 +59,16 @@ public class Yatzy {
         return diceHand.getSumOfSpecificValue(3);
     }
 
-    protected int[] dice;
-
-    public Yatzy(DiceHand diceHand) {
-        dice = diceHand.stream().mapToInt(Integer::intValue).toArray();
-    }
-
     public int fours(DiceHand diceHand) {
-        return diceHand.stream().filter(value -> value == 4).mapToInt(Integer::intValue).sum();
+        return diceHand.getSumOfSpecificValue(4);
     }
 
     public int fives(DiceHand diceHand) {
-        return diceHand.stream().filter(value -> value == 5).mapToInt(Integer::intValue).sum();
+        return diceHand.getSumOfSpecificValue(5);
     }
 
     public int sixes(DiceHand diceHand) {
-        return diceHand.stream().filter(value -> value == 6).mapToInt(Integer::intValue).sum();
+        return diceHand.getSumOfSpecificValue(6);
     }
 
     public static int score_pair(int d1, int d2, int d3, int d4, int d5) {
