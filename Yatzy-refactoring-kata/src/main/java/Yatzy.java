@@ -20,7 +20,7 @@ class DiceHand implements Iterable<Integer> {
         final Set<Map.Entry<Integer, Long>> entries = collect.entrySet();
         return entries
             .stream()
-            .filter(key -> key.getValue() >= 2)
+            .filter(key -> key.getValue() >= minimal_occurrence)
             .mapToInt(Map.Entry::getKey);
     }
 
@@ -50,7 +50,8 @@ public class Yatzy {
     public static int yatzy(DiceHand dice) {
         final long countOfUniqueValues = dice
             .stream()
-            .distinct().count();
+            .distinct()
+            .count();
 
         if (countOfUniqueValues == 1) {
             return 50;
@@ -103,72 +104,29 @@ public class Yatzy {
         return diceHand.findRepetitions(4).findFirst().orElse(0) * 4;
     }
 
-    public static int smallStraight(int d1, int d2, int d3, int d4, int d5) {
-        int[] tallies;
-        tallies = new int[6];
-        tallies[d1 - 1] += 1;
-        tallies[d2 - 1] += 1;
-        tallies[d3 - 1] += 1;
-        tallies[d4 - 1] += 1;
-        tallies[d5 - 1] += 1;
-        if (tallies[0] == 1 &&
-            tallies[1] == 1 &&
-            tallies[2] == 1 &&
-            tallies[3] == 1 &&
-            tallies[4] == 1)
+    public static int smallStraight(DiceHand diceHand) {
+        final List<Integer> collect = diceHand.stream().distinct().collect(Collectors.toList());
+        if (collect.size() == 5 && Collections.min(collect) == 1) {
             return 15;
+        }
         return 0;
     }
 
-    public static int largeStraight(int d1, int d2, int d3, int d4, int d5) {
-        int[] tallies;
-        tallies = new int[6];
-        tallies[d1 - 1] += 1;
-        tallies[d2 - 1] += 1;
-        tallies[d3 - 1] += 1;
-        tallies[d4 - 1] += 1;
-        tallies[d5 - 1] += 1;
-        if (tallies[1] == 1 &&
-            tallies[2] == 1 &&
-            tallies[3] == 1 &&
-            tallies[4] == 1
-            && tallies[5] == 1)
+    public static int largeStraight(DiceHand diceHand) {
+        final List<Integer> collect = diceHand.stream().distinct().collect(Collectors.toList());
+        if (collect.size() == 5 && Collections.min(collect) == 2) {
             return 20;
+        }
         return 0;
     }
 
-    public static int fullHouse(int d1, int d2, int d3, int d4, int d5) {
-        int[] tallies;
-        boolean _2 = false;
-        int i;
-        int _2_at = 0;
-        boolean _3 = false;
-        int _3_at = 0;
-
-
-        tallies = new int[6];
-        tallies[d1 - 1] += 1;
-        tallies[d2 - 1] += 1;
-        tallies[d3 - 1] += 1;
-        tallies[d4 - 1] += 1;
-        tallies[d5 - 1] += 1;
-
-        for (i = 0; i != 6; i += 1)
-            if (tallies[i] == 2) {
-                _2 = true;
-                _2_at = i + 1;
-            }
-
-        for (i = 0; i != 6; i += 1)
-            if (tallies[i] == 3) {
-                _3 = true;
-                _3_at = i + 1;
-            }
-
-        if (_2 && _3)
-            return _2_at * 2 + _3_at * 3;
-        else
-            return 0;
+    public static int fullHouse(DiceHand diceHand) {
+        final Set<Map.Entry<Integer, Long>> entries = diceHand.stream().collect(Collectors.groupingBy(value -> value, Collectors.counting())).entrySet();
+        if (entries.size() == 2) {
+            if (entries.stream().filter(key -> key.getValue().equals(2L) || key.getValue().equals(3L)).count() == 2)
+                return entries.stream().map(k -> k.getKey() * k.getValue()).mapToInt(Long::intValue).sum();
+        }
+        return 0;
     }
 }
 
