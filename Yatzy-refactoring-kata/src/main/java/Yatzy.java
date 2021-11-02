@@ -1,6 +1,8 @@
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 
 class DiceHand implements Iterable<Integer> {
@@ -18,6 +20,10 @@ class DiceHand implements Iterable<Integer> {
     public Iterator<Integer> iterator() {
         return this.valuesOfDices.iterator();
     }
+
+    public Stream<Integer> stream() {
+        return valuesOfDices.stream();
+    }
 }
 
 public class Yatzy {
@@ -27,12 +33,13 @@ public class Yatzy {
     }
 
     public static int yatzy(DiceHand dice) {
-        int[] counts = new int[6];
-        for (int die : dice)
-            counts[die - 1]++;
-        for (int i = 0; i != 6; i++)
-            if (counts[i] == 5)
-                return 50;
+        final long countOfUniqueValues = dice
+            .stream()
+            .distinct().count();
+
+        if (countOfUniqueValues == 1) {
+            return 50;
+        }
         return 0;
     }
 
