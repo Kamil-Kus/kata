@@ -1,10 +1,32 @@
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
+
+
+class DiceHand implements Iterable<Integer> {
+    private final List<Integer> valuesOfDices = new ArrayList<>();
+
+    public DiceHand(int d1, int d2, int d3, int d4, int d5) {
+        valuesOfDices.add(d1);
+        valuesOfDices.add(d2);
+        valuesOfDices.add(d3);
+        valuesOfDices.add(d4);
+        valuesOfDices.add(d5);
+    }
+
+    @Override
+    public Iterator<Integer> iterator() {
+        return this.valuesOfDices.iterator();
+    }
+}
+
 public class Yatzy {
 
     public static int chance(int d1, int d2, int d3, int d4, int d5) {
         return d1 + d2 + d3 + d4 + d5;
     }
 
-    public static int yatzy(int... dice) {
+    public static int yatzy(DiceHand dice) {
         int[] counts = new int[6];
         for (int die : dice)
             counts[die - 1]++;
