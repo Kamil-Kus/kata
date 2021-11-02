@@ -1,7 +1,6 @@
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -14,6 +13,13 @@ class DiceHand implements Iterable<Integer> {
         valuesOfDices.add(d3);
         valuesOfDices.add(d4);
         valuesOfDices.add(d5);
+    }
+
+    int getSumOfSpecificValue(int i) {
+        return stream()
+            .filter(value -> value.equals(i))
+            .mapToInt(Integer::intValue)
+            .sum();
     }
 
     @Override
@@ -44,32 +50,15 @@ public class Yatzy {
     }
 
     public static int ones(DiceHand diceHand) {
-        return diceHand
-            .stream()
-            .filter(value -> value.equals(1))
-            .mapToInt(Integer::intValue)
-            .sum();
+        return diceHand.getSumOfSpecificValue(1);
     }
 
-    public static int twos(int d1, int d2, int d3, int d4, int d5) {
-        int sum = 0;
-        if (d1 == 2) sum += 2;
-        if (d2 == 2) sum += 2;
-        if (d3 == 2) sum += 2;
-        if (d4 == 2) sum += 2;
-        if (d5 == 2) sum += 2;
-        return sum;
+    public static int twos(DiceHand diceHand) {
+        return diceHand.getSumOfSpecificValue(2);
     }
 
-    public static int threes(int d1, int d2, int d3, int d4, int d5) {
-        int s;
-        s = 0;
-        if (d1 == 3) s += 3;
-        if (d2 == 3) s += 3;
-        if (d3 == 3) s += 3;
-        if (d4 == 3) s += 3;
-        if (d5 == 3) s += 3;
-        return s;
+    public static int threes(DiceHand diceHand) {
+        return diceHand.getSumOfSpecificValue(3);
     }
 
     protected int[] dice;
