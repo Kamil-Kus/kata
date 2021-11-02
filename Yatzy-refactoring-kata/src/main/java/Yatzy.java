@@ -67,25 +67,15 @@ public class Yatzy {
     }
 
     public int fours(DiceHand diceHand) {
-        final Map<Integer, Long> collect = diceHand.stream().collect(Collectors.groupingBy(v -> v, Collectors.counting()));
-        return Math.toIntExact(collect.get(4)) * 4;
+        return diceHand.stream().filter(value -> value == 4).mapToInt(Integer::intValue).sum();
     }
 
-    public int fives() {
-        int s = 0;
-        int i;
-        for (i = 0; i < dice.length; i++)
-            if (dice[i] == 5)
-                s = s + 5;
-        return s;
+    public int fives(DiceHand diceHand) {
+        return diceHand.stream().filter(value -> value == 5).mapToInt(Integer::intValue).sum();
     }
 
-    public int sixes() {
-        int sum = 0;
-        for (int at = 0; at < dice.length; at++)
-            if (dice[at] == 6)
-                sum = sum + 6;
-        return sum;
+    public int sixes(DiceHand diceHand) {
+        return diceHand.stream().filter(value -> value == 6).mapToInt(Integer::intValue).sum();
     }
 
     public static int score_pair(int d1, int d2, int d3, int d4, int d5) {
