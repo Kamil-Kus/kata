@@ -1,6 +1,5 @@
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 
@@ -63,24 +62,13 @@ public class Yatzy {
 
     protected int[] dice;
 
-    public Yatzy(int d1, int d2, int d3, int d4, int _5) {
-        dice = new int[5];
-        dice[0] = d1;
-        dice[1] = d2;
-        dice[2] = d3;
-        dice[3] = d4;
-        dice[4] = _5;
+    public Yatzy(DiceHand diceHand) {
+        dice = diceHand.stream().mapToInt(Integer::intValue).toArray();
     }
 
-    public int fours() {
-        int sum;
-        sum = 0;
-        for (int at = 0; at != 5; at++) {
-            if (dice[at] == 4) {
-                sum += 4;
-            }
-        }
-        return sum;
+    public int fours(DiceHand diceHand) {
+        final Map<Integer, Long> collect = diceHand.stream().collect(Collectors.groupingBy(v -> v, Collectors.counting()));
+        return Math.toIntExact(collect.get(4)) * 4;
     }
 
     public int fives() {
