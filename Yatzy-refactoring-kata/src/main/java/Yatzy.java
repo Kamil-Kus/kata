@@ -1,4 +1,6 @@
 import java.util.*;
+import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 import java.util.stream.Stream;
 
 
@@ -11,6 +13,15 @@ class DiceHand implements Iterable<Integer> {
         valuesOfDices.add(d3);
         valuesOfDices.add(d4);
         valuesOfDices.add(d5);
+    }
+
+    IntStream findTwoOrMoreOccurrence() {
+        final Map<Integer, Long> collect = stream().collect(Collectors.groupingBy(value -> value, Collectors.counting()));
+        final Set<Map.Entry<Integer, Long>> entries = collect.entrySet();
+        return entries
+            .stream()
+            .filter(key -> key.getValue() >= 2)
+            .mapToInt(Map.Entry::getKey);
     }
 
     int getSumOfSpecificValue(int i) {
@@ -71,38 +82,16 @@ public class Yatzy {
         return diceHand.getSumOfSpecificValue(6);
     }
 
-    public static int score_pair(int d1, int d2, int d3, int d4, int d5) {
-        int[] counts = new int[6];
-        counts[d1 - 1]++;
-        counts[d2 - 1]++;
-        counts[d3 - 1]++;
-        counts[d4 - 1]++;
-        counts[d5 - 1]++;
-        int at;
-        for (at = 0; at != 6; at++)
-            if (counts[6 - at - 1] >= 2)
-                return (6 - at) * 2;
-        return 0;
+    public static int score_pair(DiceHand diceHand) {
+        final OptionalInt max = diceHand.findTwoOrMoreOccurrence()
+            .max();
+        return max.orElse(0) * 2;
     }
 
-    public static int two_pair(int d1, int d2, int d3, int d4, int d5) {
-        int[] counts = new int[6];
-        counts[d1 - 1]++;
-        counts[d2 - 1]++;
-        counts[d3 - 1]++;
-        counts[d4 - 1]++;
-        counts[d5 - 1]++;
-        int n = 0;
-        int score = 0;
-        for (int i = 0; i < 6; i += 1)
-            if (counts[6 - i - 1] >= 2) {
-                n++;
-                score += (6 - i);
-            }
-        if (n == 2)
-            return score * 2;
-        else
-            return 0;
+    public static int two_pair(DiceHand diceHand) {
+        final int sum = diceHand.findTwoOrMoreOccurrence()
+            .sum();
+        return sum * 2;
     }
 
     public static int four_of_a_kind(int _1, int _2, int d3, int d4, int d5) {
