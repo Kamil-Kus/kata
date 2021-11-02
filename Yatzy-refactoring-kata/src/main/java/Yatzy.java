@@ -43,16 +43,12 @@ public class Yatzy {
         return 0;
     }
 
-    public static int ones(int d1, int d2, int d3, int d4, int d5) {
-        int sum = 0;
-        if (d1 == 1) sum++;
-        if (d2 == 1) sum++;
-        if (d3 == 1) sum++;
-        if (d4 == 1) sum++;
-        if (d5 == 1)
-            sum++;
-
-        return sum;
+    public static int ones(DiceHand diceHand) {
+        return diceHand
+            .stream()
+            .filter(value -> value.equals(1))
+            .mapToInt(Integer::intValue)
+            .sum();
     }
 
     public static int twos(int d1, int d2, int d3, int d4, int d5) {
