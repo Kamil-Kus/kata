@@ -15,8 +15,8 @@ class DiceHand implements Iterable<Integer> {
         valuesOfDices.add(d5);
     }
 
-    IntStream findRepetitions(int minimal_occurrence) {
-        final Map<Integer, Long> collect = stream().collect(Collectors.groupingBy(value -> value, Collectors.counting()));
+    public IntStream findRepetitions(int minimal_occurrence) {
+        final Map<Integer, Long> collect = extractResultGroupedByOccurrence();
         final Set<Map.Entry<Integer, Long>> entries = collect.entrySet();
         return entries
             .stream()
@@ -24,7 +24,11 @@ class DiceHand implements Iterable<Integer> {
             .mapToInt(Map.Entry::getKey);
     }
 
-    int getSumOfSpecificValue(int i) {
+    public Map<Integer, Long> extractResultGroupedByOccurrence() {
+        return stream().collect(Collectors.groupingBy(value -> value, Collectors.counting()));
+    }
+
+    public int getSumOfSpecificValue(int i) {
         return stream()
             .filter(value -> value.equals(i))
             .mapToInt(Integer::intValue)
@@ -121,10 +125,9 @@ public class Yatzy {
     }
 
     public static int fullHouse(DiceHand diceHand) {
-        final Set<Map.Entry<Integer, Long>> entries = diceHand.stream().collect(Collectors.groupingBy(value -> value, Collectors.counting())).entrySet();
-        if (entries.size() == 2) {
-            if (entries.stream().filter(key -> key.getValue().equals(2L) || key.getValue().equals(3L)).count() == 2)
-                return entries.stream().map(k -> k.getKey() * k.getValue()).mapToInt(Long::intValue).sum();
+        final Map<Integer, Long> resultGroupedByOccurrence = diceHand.extractResultGroupedByOccurrence();
+        if (resultGroupedByOccurrence.size() == 2) {
+            return resultGroupedByOccurrence.entrySet().stream().map(p -> p.getKey() * p.getValue()).mapToInt(Long::intValue).sum();
         }
         return 0;
     }
